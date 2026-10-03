@@ -19,7 +19,7 @@ case "$ID ${ID_LIKE:-}" in
   *) echo "Unsupported container distribution: $ID" >&2; exit 1 ;;
 esac
 scratch=$(mktemp -d)
-trap 'rm -rf "$scratch"' EXIT
+trap 'if [[ -n ${xvfb_pid:-} ]]; then kill "$xvfb_pid" 2>/dev/null || true; fi; rm -rf "$scratch"' EXIT
 prefix="$scratch/Install With Spaces"
 mkdir "$scratch/bin"
 cat > "$scratch/bin/curl" <<'CURL'
@@ -55,4 +55,27 @@ for attempt in 1 2; do
   current=$(readlink "$prefix/share/console-view/current")
   if [[ $attempt == 1 ]]; then first_release=$current; else [[ $current == "$first_release" ]]; fi
 done
-printf '\nPASS: %s; %s; real library/GStreamer checks, installed launcher, desktop entry, and repeat installation.\n' "$PRETTY_NAME" "$(getconf GNU_LIBC_VERSION)"
+# Install display-test tools only after the fresh-system dependency checks pass.
+printf '\nInstalling test-only Xvfb and fonts for the X11 startup check.\n'
+case "$ID ${ID_LIKE:-}" in
+  *debian*|*ubuntu*) DEBIAN_FRONTEND=noninteractive apt-get install -y xvfb fonts-dejavu-core ;;
+  *fedora*|*rhel*) dnf install -y xorg-x11-server-Xvfb dejavu-sans-fonts ;;
+  *arch*) pacman -S --noconfirm --needed xorg-server-xvfb ttf-dejavu ;;
+  *suse*) zypper --non-interactive install xorg-x11-server-Xvfb dejavu-fonts ;;
+esac
+Xvfb :93 -screen 0 1024x768x24 -nolisten tcp > "$scratch/xvfb.txt" 2>&1 &
+xvfb_pid=$!
+for attempt in {1..50}; do
+  [[ -S /tmp/.X11-unix/X93 ]] && break
+  kill -0 "$xvfb_pid" 2>/dev/null || { cat "$scratch/xvfb.txt"; exit 1; }
+  sleep 0.1
+done
+[[ -S /tmp/.X11-unix/X93 ]] || { cat "$scratch/xvfb.txt"; exit 1; }
+image=${CONSOLE_VIEW_SMOKE_IMAGE:-"$artifact_dir/home-xcb.png"}
+mkdir -p "$(dirname "$image")"
+timeout 30s env DISPLAY=:93 QT_QPA_PLATFORM=xcb CONSOLE_VIEW_SMOKE_IMAGE="$image" \
+  "$prefix/bin/consoleview" --smoke-test | tee "$scratch/startup-xcb.txt"
+grep -Fx 'Console View Qt startup smoke passed' "$scratch/startup-xcb.txt"
+[[ -s $image && $(od -An -tx1 -N8 "$image" | tr -d ' \n') == 89504e470d0a1a0a ]]
+printf 'XCB home image: '; sha256sum "$image"
+printf '\nPASS: %s; %s; real library/GStreamer checks, installed launcher, desktop entry, repeat installation, and rendered X11 startup.\n' "$PRETTY_NAME" "$(getconf GNU_LIBC_VERSION)"

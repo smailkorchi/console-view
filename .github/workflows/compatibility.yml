@@ -7,10 +7,15 @@ on:
         description: Platform to build and verify
         type: choice
         default: all
-        options: [all, linux, windows, legacy-macos]
+        options: [all, linux, linux-runtime, windows, legacy-macos]
+      linux_artifact_run:
+        description: Successful Linux package run ID (linux-runtime only)
+        type: string
+        default: ''
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: compatibility-${{ github.workflow }}-${{ github.ref }}-${{ inputs.platform }}
@@ -67,7 +72,7 @@ jobs:
           retention-days: 14
 
   linux-desktops:
-    if: always() && !cancelled() && (inputs.platform == 'all' || inputs.platform == 'linux')
+    if: always() && !cancelled() && (inputs.platform == 'all' || inputs.platform == 'linux' || inputs.platform == 'linux-runtime')
     needs: linux
     name: Linux installer / ${{ matrix.distribution }}
     runs-on: ubuntu-24.04
@@ -86,20 +91,27 @@ jobs:
             image: opensuse/leap:16.0@sha256:7f3aeccb6a613c0fc1690d3d3e5eb493fd477ee4587de20640017fc36d72f9b0
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Validate the existing Linux package run
+        if: inputs.platform == 'linux-runtime'
+        env:
+          ARTIFACT_RUN: ${{ inputs.linux_artifact_run }}
+        run: '[[ "$ARTIFACT_RUN" =~ ^[1-9][0-9]*$ ]]'
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: console-view-linux-x86_64-glibc
           path: build/linux-runtime-artifact
+          run-id: ${{ inputs.platform == 'linux-runtime' && inputs.linux_artifact_run || github.run_id }}
+          github-token: ${{ github.token }}
       - name: Verify per-user terminal install and repeat install on a fresh distribution
         run: |
           mkdir -p dist/compatibility/linux-runtime
-          docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work '${{ matrix.image }}' bash packaging/compatibility/test-linux-install.sh build/linux-runtime-artifact > dist/compatibility/linux-runtime/result.txt 2>&1 || { cat dist/compatibility/linux-runtime/result.txt; exit 1; }
+          docker run --rm -e CONSOLE_VIEW_SMOKE_IMAGE=/work/dist/compatibility/linux-runtime/home-xcb.png -v "$GITHUB_WORKSPACE:/work" -w /work '${{ matrix.image }}' bash packaging/compatibility/test-linux-install.sh build/linux-runtime-artifact > dist/compatibility/linux-runtime/result.txt 2>&1 || { cat dist/compatibility/linux-runtime/result.txt; exit 1; }
           cat dist/compatibility/linux-runtime/result.txt
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: linux-installer-${{ strategy.job-index }}
-          path: dist/compatibility/linux-runtime/result.txt
+          path: dist/compatibility/linux-runtime/*
           if-no-files-found: error
           retention-days: 14
 

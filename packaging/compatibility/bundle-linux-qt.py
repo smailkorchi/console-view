@@ -49,7 +49,7 @@ def package_record(path):
             for data in data_files:
                 shutil.copyfile(data, directory/'share/icu'/data.name)
         elif source == 'pcre2':
-            license_url = f'https://raw.githubusercontent.com/PCRE2Project/pcre2/pcre2-{upstream_version}/LICENCE'
+            license_url = f'https://raw.githubusercontent.com/PCRE2Project/pcre2/pcre2-{upstream_version}/LICENCE.md'
         elif source == 'double-conversion':
             license_url = f'https://raw.githubusercontent.com/google/double-conversion/v{upstream_version}/LICENSE'
         elif source == 'libjpeg-turbo':

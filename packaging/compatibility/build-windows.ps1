@@ -17,7 +17,7 @@ $python = (Get-Command python).Source
 New-Item -ItemType Directory -Force $build,$output,$portable | Out-Null
 $cmakeArch = if ($Arch -eq 'x86') { 'Win32' } else { 'x64' }
 # Qt 5.15.2's MSVC2019 SDK uses the v142 ABI; newer VC14 runtimes are compatible.
-cmake -S compatibility -B "$build/cmake" -G 'Visual Studio 17 2022' -A $cmakeArch -T v142 "-DCMAKE_PREFIX_PATH=$QtDir" -DCMAKE_SYSTEM_VERSION=10.0.19041.0
+cmake -S compatibility -B "$build/cmake" -G 'Visual Studio 17 2022' -A $cmakeArch -T v142 "-DCMAKE_PREFIX_PATH=$QtDir" '-DCMAKE_SYSTEM_VERSION=10.0.19041.0'
 if ($LASTEXITCODE -ne 0) { throw 'CMake configuration failed' }
 cmake --build "$build/cmake" --config Release --parallel 2
 if ($LASTEXITCODE -ne 0) { throw 'CMake build failed' }

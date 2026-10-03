@@ -265,8 +265,8 @@ struct ConsoleRootView: View {
     private var viewer: some View {
         ZStack {
             Color.black
-            if let session = controller.session, PreviewState.current == .none {
-                CapturePreview(session: session, gravity: preferences.gravity)
+            if controller.session != nil, PreviewState.current == .none {
+                CapturePreview(previewLayer: controller.previewLayer, gravity: preferences.gravity)
             }
             if !appDelegate.isFullScreen {
                 if phase != .live {
@@ -577,24 +577,25 @@ private struct WindowAttachment: NSViewRepresentable {
 }
 
 private struct CapturePreview: NSViewRepresentable {
-    let session: AVCaptureSession
+    let previewLayer: AVCaptureVideoPreviewLayer
     let gravity: AVLayerVideoGravity
     func makeNSView(context: Context) -> PreviewHostView {
-        let view = PreviewHostView()
-        view.previewLayer.session = session
+        let view = PreviewHostView(previewLayer: previewLayer)
         view.previewLayer.videoGravity = gravity
         return view
     }
     func updateNSView(_ view: PreviewHostView, context: Context) {
-        if view.previewLayer.session !== session { view.previewLayer.session = session }
         view.previewLayer.videoGravity = gravity
     }
-    static func dismantleNSView(_ view: PreviewHostView, coordinator: ()) { view.previewLayer.session = nil }
+    static func dismantleNSView(_ view: PreviewHostView, coordinator: ()) {
+        if view.previewLayer.superlayer === view.layer { view.previewLayer.removeFromSuperlayer() }
+    }
 
     final class PreviewHostView: NSView {
-        let previewLayer = AVCaptureVideoPreviewLayer()
-        override init(frame frameRect: NSRect) {
-            super.init(frame: frameRect)
+        let previewLayer: AVCaptureVideoPreviewLayer
+        init(previewLayer: AVCaptureVideoPreviewLayer) {
+            self.previewLayer = previewLayer
+            super.init(frame: .zero)
             wantsLayer = true
             layer?.backgroundColor = NSColor.black.cgColor
             layer?.addSublayer(previewLayer)
@@ -602,6 +603,7 @@ private struct CapturePreview: NSViewRepresentable {
         required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
         override func layout() {
             super.layout()
+            guard previewLayer.superlayer === layer else { return }
             CATransaction.begin()
             CATransaction.setDisableActions(true)
             previewLayer.frame = bounds

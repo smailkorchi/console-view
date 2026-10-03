@@ -29,11 +29,11 @@ independent evolution of PS4 View.
 
 | Your Mac | Download | Required system |
 | --- | --- | --- |
-| Apple Silicon — M-series | [Console View 1.0.0 — Apple Silicon](https://github.com/smailkorchi/console-view/releases/download/v1.0.0/Console-View-1.0.0-Apple-Silicon.dmg) | macOS 14 Sonoma or newer |
-| Intel | [Console View 1.0.0 — Intel](https://github.com/smailkorchi/console-view/releases/download/v1.0.0/Console-View-1.0.0-Intel.dmg) | macOS 14 Sonoma or newer |
+| Apple Silicon — M-series | [Console View 1.0.1 — Apple Silicon](https://github.com/smailkorchi/console-view/releases/download/v1.0.1/Console-View-1.0.1-Apple-Silicon.dmg) | macOS 14 Sonoma or newer |
+| Intel | [Console View 1.0.1 — Intel](https://github.com/smailkorchi/console-view/releases/download/v1.0.1/Console-View-1.0.1-Intel.dmg) | macOS 14 Sonoma or newer |
 
-[Release notes](https://github.com/smailkorchi/console-view/releases/tag/v1.0.0)
-· [SHA-256 checksums](https://github.com/smailkorchi/console-view/releases/download/v1.0.0/SHA256SUMS.txt)
+[Release notes](https://github.com/smailkorchi/console-view/releases/tag/v1.0.1)
+· [SHA-256 checksums](https://github.com/smailkorchi/console-view/releases/download/v1.0.1/SHA256SUMS.txt)
 
 The current downloads are **native macOS previews**. A separate compatibility
 edition is being developed for Intel Macs running macOS 10.13 High Sierra
@@ -127,7 +127,7 @@ The native app is in `Sources/`. The original PS4 View project remains separate.
 
 ## Contribute
 
-Optimized builds, 49 capture-policy/lifecycle checks, signatures, and mounted-DMG
+Optimized builds, 52 capture-policy/lifecycle checks, signatures, and mounted-DMG
 contents are verified locally. Installed-app testing on Apple Silicon with one
 MS2109 USB Video card confirmed direct single-source selection, capture-only
 full screen, Escape restoration, and Return Home stopping capture and leaving

@@ -91,6 +91,9 @@ final class CaptureController: NSObject, ObservableObject {
     @Published var resolution = ""
     @Published var audioStatus = "Audio unavailable"
     @Published var session: AVCaptureSession?
+    // Keep this layer alive across SwiftUI view replacement. Only the capture
+    // queue changes its session, because that setter mutates capture connections.
+    let previewLayer = AVCaptureVideoPreviewLayer()
     let preferences: AppPreferences
 
     private let queue = DispatchQueue(label: "consoleview.capture", qos: .userInitiated)
@@ -231,6 +234,10 @@ final class CaptureController: NSObject, ObservableObject {
 
     private func refreshAndConnect() {
         guard !closed, !sleeping else { return }
+        if captureSession != nil, let selectedVideo, !selectedVideo.isConnected {
+            reconnect(reason: "Your capture card was disconnected.", token: activeToken)
+            return
+        }
         if captureSession == nil, !preparing, let token = lifetime.advanceIfViewing() {
             retry?.cancel(); retry = nil
             discover(token: token)
@@ -264,6 +271,7 @@ final class CaptureController: NSObject, ObservableObject {
                 self.phase = multiple ? .choosingSource : .waiting
                 self.message = multiple ? "Choose the capture card you want to view." : hasSavedChoice ? "Your selected capture card isn’t connected." : "Connect your capture card to begin."
             }
+            if !multiple { scheduleRetry(token: token) }
             return
         }
         if configuration.videoID.isEmpty {
@@ -348,7 +356,12 @@ final class CaptureController: NSObject, ObservableObject {
     }
 
     private func buildSession(video: AVCaptureDevice, audio: AVCaptureDevice?, paired: Bool, audioMessage: String, token: UInt64) {
-        guard lifetime.matches(token), lifetime.wantsViewing, video.isConnected else { preparing = false; return }
+        guard lifetime.matches(token), lifetime.wantsViewing else { preparing = false; return }
+        guard video.isConnected else {
+            preparing = false
+            reconnect(reason: "Your capture card was disconnected.", token: token)
+            return
+        }
         let capture = AVCaptureSession()
         do {
             try configure(capture, video: video, audio: audio, paired: paired, audioMessage: audioMessage, token: token)
@@ -356,10 +369,11 @@ final class CaptureController: NSObject, ObservableObject {
             captureSession = capture
             selectedVideo = video
             observeSession(capture, token: token)
-            publish(token) { self.session = capture; self.phase = .connecting; self.message = "Waiting for video from your capture card…" }
+            previewLayer.session = capture
             capture.startRunning()
             preparing = false
             guard lifetime.matches(token) else { teardown(token: token); return }
+            publish(token) { self.session = capture; self.phase = .connecting; self.message = "Waiting for video from your capture card…" }
             lastFrameTime = ProcessInfo.processInfo.systemUptime
             hasFrames = false
             startWatchdog(token: token)
@@ -483,13 +497,18 @@ final class CaptureController: NSObject, ObservableObject {
         activeToken = next
         teardown(token: next)
         publish(next) { self.phase = .reconnecting; self.message = reason }
+        scheduleRetry(token: next)
+    }
+
+    private func scheduleRetry(token: UInt64) {
+        guard retry == nil, !closed, !sleeping, lifetime.matches(token), lifetime.wantsViewing else { return }
         let delay = CapturePolicy.retryDelay(attempt: retryCount)
         retryCount = min(retryCount + 1, 3)
         let work = DispatchWorkItem { [weak self] in
-            guard let self, self.lifetime.matches(next), self.lifetime.wantsViewing, !self.sleeping else { return }
+            guard let self, self.lifetime.matches(token), self.lifetime.wantsViewing, !self.sleeping else { return }
             self.retry = nil
-            self.discover(token: next)
-            self.connect(token: next)
+            self.discover(token: token)
+            self.connect(token: token)
         }
         retry = work
         queue.asyncAfter(deadline: .now() + delay, execute: work)
@@ -500,6 +519,7 @@ final class CaptureController: NSObject, ObservableObject {
         watchdog?.cancel(); watchdog = nil
         sessionObservers.forEach { NotificationCenter.default.removeObserver($0) }
         sessionObservers.removeAll()
+        previewLayer.session = nil
         captureSession?.stopRunning()
         if let captureSession {
             for output in captureSession.outputs {
@@ -568,6 +588,7 @@ final class CaptureController: NSObject, ObservableObject {
                     if name == AVCaptureDevice.wasDisconnectedNotification, let device = notification.object as? AVCaptureDevice {
                         if device.uniqueID == self.selectedVideo?.uniqueID, self.selectedVideo?.isConnected == false {
                             self.reconnect(reason: "Your capture card was disconnected.", token: self.activeToken)
+                            return
                         } else if device.uniqueID == self.selectedAudio?.uniqueID, self.selectedAudio?.isConnected == false {
                             self.audioFailed(reason: "Capture audio disconnected. Video is still available.", token: self.activeToken, retryWhenAvailable: true)
                         }

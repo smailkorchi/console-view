@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 enum CaptureLifecycleTests {
     static func run() throws -> Int {
@@ -16,6 +17,9 @@ enum CaptureLifecycleTests {
         let controller = CaptureController(preferences: preferences)
         defer { controller.shutdown() }
         var checks = 0
+        var discoveries = 0
+        let discoverySubscription = controller.$devices.dropFirst().sink { _ in discoveries += 1 }
+        defer { discoverySubscription.cancel() }
 
         func wait(_ message: String, until predicate: () -> Bool) throws {
             let deadline = ProcessInfo.processInfo.systemUptime + 4
@@ -31,11 +35,22 @@ enum CaptureLifecycleTests {
 
         controller.launch()
         try wait("Launch must automatically wait for its exact card despite old disabled flags.", until: waitForCard)
+        let initialDiscoveries = discoveries
+        try wait("A missing card must keep retrying discovery without another device notification.") { discoveries > initialDiscoveries }
         controller.launch()
         try wait("Launch must remain idempotent while viewing is already requested.", until: waitForCard)
 
         controller.stop()
         try wait("Returning Home must cancel capture intent.") { controller.phase == .stopped && controller.session == nil }
+        let stoppedDiscoveries = discoveries
+        let retryDeadline = ProcessInfo.processInfo.systemUptime + 2.2
+        while ProcessInfo.processInfo.systemUptime < retryDeadline {
+            RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.02))
+            guard discoveries == stoppedDiscoveries else { throw Failure(message: "A pending retry rediscovered devices after Return Home.") }
+        }
+        checks += 1
+        guard controller.previewLayer.session == nil else { throw Failure(message: "A stopped controller kept its preview attached.") }
+        checks += 1
         controller.launch()
         try wait("Reopening a stopped window must resume automatic viewing.", until: waitForCard)
 

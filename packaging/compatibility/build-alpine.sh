@@ -10,6 +10,7 @@ build="$PWD/build/compatibility-linux-musl-$arch"
 output="$PWD/dist/compatibility/linux-musl-$arch"
 portable="$build/Console-View"
 mkdir -p "$output" "$portable/bin" "$portable/lib" "$portable/plugins/platforms" "$portable/plugins/mediaservice"
+export CONSOLE_VIEW_SMOKE_IMAGE="$output/home.png"
 for plugin in camerabin wrappercamerabinsrc v4l2src; do gst-inspect-1.0 "$plugin" > "$output/gstreamer-$plugin.txt"; done
 cmake -S compatibility -B "$build/cmake" -G Ninja -DCMAKE_BUILD_TYPE=Release
 cmake --build "$build/cmake" --parallel 2

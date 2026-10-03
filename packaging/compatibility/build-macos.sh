@@ -11,6 +11,7 @@ dmg_python="${DMG_PYTHON:-python3}"
 build="${RUNNER_TEMP:-$PWD/build}/console-view-legacy-macos"
 output="$PWD/dist/compatibility/macos-intel"
 mkdir -p "$output" "$build"
+export CONSOLE_VIEW_SMOKE_IMAGE="$output/home.png"
 stage=$(mktemp -d "$build/dmg.XXXXXX")
 mount_dir=""
 mounted=false

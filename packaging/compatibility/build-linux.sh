@@ -21,6 +21,7 @@ output="$PWD/dist/compatibility/linux-$arch"
 portable="$build/Console-View"
 package="$build/deb"
 mkdir -p "$output" "$portable/bin" "$portable/lib" "$portable/plugins" "$package/DEBIAN"
+export CONSOLE_VIEW_SMOKE_IMAGE="$output/home.png"
 for plugin in camerabin wrappercamerabinsrc v4l2src; do gst-inspect-1.0 "$plugin" > "$output/gstreamer-$plugin.txt"; done
 cmake -S compatibility -B "$build/cmake" -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
 cmake --build "$build/cmake" --parallel 2

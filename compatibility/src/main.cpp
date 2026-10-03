@@ -465,7 +465,9 @@ int main(int argc, char **argv) {
     if (smoke) {
         QTimer::singleShot(0, &app, [&app, &window] {
             QSvgRenderer github(QStringLiteral(":/github.svg")), instagram(QStringLiteral(":/instagram.svg"));
-            const bool valid = !QPixmap(":/AppIcon.png").isNull() && github.isValid() && instagram.isValid() && !window.grab().isNull() && window.smokeCheck();
+            const QString image = qEnvironmentVariable("CONSOLE_VIEW_SMOKE_IMAGE");
+            const bool valid = !QPixmap(":/AppIcon.png").isNull() && github.isValid() && instagram.isValid() && !window.grab().isNull() && window.smokeCheck()
+                && (image.isEmpty() || window.grab().save(image));
             std::cout << (valid ? "Console View Qt startup smoke passed\n" : "Console View Qt startup smoke failed\n");
             app.exit(valid ? 0 : 2);
         });

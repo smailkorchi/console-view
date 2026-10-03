@@ -32,7 +32,7 @@ def package_record(path):
                 'source_url': f'https://sources.debian.org/src/{quote(source, safe="")}/{quote(source_version, safe="")}/'}
     if shutil.which('apk'):
         owner = subprocess.check_output(['apk', 'info', '--who-owns', path], text=True).strip().split()[-1]
-        package = re.sub(r'-\d[^/]*$', '', owner)
+        package = owner.rsplit('-', 2)[0]
         metadata = next((dict(line.split(':', 1) for line in block.splitlines() if ':' in line) for block in Path('/lib/apk/db/installed').read_text().split('\n\n') if f'P:{package}\n' in block+'\n'), None)
         if not metadata or not metadata.get('c'):
             raise SystemExit(f'Missing exact Alpine source commit for {package}')

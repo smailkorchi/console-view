@@ -29,7 +29,7 @@ if(WIN32)
     target_link_libraries(consoleview PRIVATE setupapi cfgmgr32)
 endif()
 if(APPLE)
-    target_link_libraries(consoleview PRIVATE "-framework AVFoundation")
+    target_link_libraries(consoleview PRIVATE "-framework AVFoundation" "-framework Foundation")
     set_target_properties(consoleview PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Console View"
         MACOSX_BUNDLE_GUI_IDENTIFIER "local.ismail.consoleview.compatibility"
         MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}" MACOSX_BUNDLE_BUNDLE_VERSION "1"

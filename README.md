@@ -16,7 +16,8 @@
 
 Connect an HDMI capture card. Open Console View. Play.
 
-A minimal native macOS app that turns your Mac into a screen for a console.
+A minimal capture-card viewer, with a native macOS edition and a compatibility
+edition for Linux, Windows, and older Intel Macs.
 One external capture card connects automatically. With several cards, choose
 the source you want. Temporary disconnections recover automatically.
 
@@ -35,11 +36,35 @@ independent evolution of PS4 View.
 [Release notes](https://github.com/smailkorchi/console-view/releases/tag/v1.0.1)
 · [SHA-256 checksums](https://github.com/smailkorchi/console-view/releases/download/v1.0.1/SHA256SUMS.txt)
 
-The current downloads are **native macOS previews**. A separate compatibility
-edition is being developed for Intel Macs running macOS 10.13 High Sierra
-through macOS 13, Windows 32-bit and 64-bit, and Linux. Those downloads will
-appear as their builds pass. The current Intel download requires macOS 14.
-Linux packages will state their processor and runtime requirements.
+The native Mac downloads are previews. A separate **compatibility preview**
+provides Linux, Windows, and older Intel Mac packages:
+
+| System | Download | Baseline |
+| --- | --- | --- |
+| Older Intel Mac | [Intel macOS compatibility DMG](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-macOS-Intel-10.13.dmg) | Targets macOS 10.13 High Sierra or newer; tested on macOS 15 Intel |
+| Windows 64-bit | [x64 installer](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Windows-x64-Setup.exe) · [Portable ZIP](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Windows-x64-Portable.zip) | Windows 10 or newer |
+| Windows 32-bit | [x86 installer](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Windows-x86-Setup.exe) · [Portable ZIP](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Windows-x86-Portable.zip) | Windows 10 or newer |
+| Linux | [Choose your processor and package](https://github.com/smailkorchi/console-view/releases/tag/v1.0.0-compatibility) | glibc 2.31+ or Alpine 3.22+; X11/XWayland |
+
+Linux downloads cover **x86_64, ARM64, i386/SSE2, and ARMv7 hard-float**.
+Debian, Ubuntu, and Kali can use `.deb` packages. Portable archives serve other
+compatible distributions, with a separate musl archive for Alpine. The terminal
+installer selects the matching processor and runtime automatically and installs
+missing dependencies through the distribution's package manager. Unsupported
+processor/runtime combinations need a source build.
+
+
+| Linux processor | Debian / Ubuntu / Kali | Other glibc distributions | Alpine / musl |
+| --- | --- | --- | --- |
+| 64-bit Intel / AMD | [.deb](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Linux-x86_64.deb) | [Portable](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Linux-x86_64-Portable.tar.xz) | [Musl portable](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Linux-Musl-x86_64-Portable.tar.xz) |
+| 64-bit ARM | [.deb](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Linux-arm64.deb) | [Portable](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Linux-arm64-Portable.tar.xz) | [Musl portable](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Linux-Musl-arm64-Portable.tar.xz) |
+| 32-bit Intel / AMD (SSE2) | [.deb](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Linux-i386.deb) | [Portable](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Linux-i386-Portable.tar.xz) | [Musl portable](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Linux-Musl-i386-Portable.tar.xz) |
+| 32-bit ARMv7 (hard-float) | [.deb](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Linux-armhf.deb) | [Portable](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Linux-armhf-Portable.tar.xz) | [Musl portable](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Linux-Musl-armhf-Portable.tar.xz) |
+
+[Compatibility release notes and checksums](https://github.com/smailkorchi/console-view/releases/tag/v1.0.0-compatibility)
+include the [build, installation and rendered startup evidence](docs/compatibility-verification.md). Capture-card video, sound, and reconnection
+on these operating systems still need hardware testing. Windows ARM64 has no
+native package. The older Mac build has not been run on actual High Sierra hardware.
 
 ## Install on Mac
 
@@ -73,7 +98,37 @@ selects the Apple Silicon or Intel download for your Mac. It installs the
 current native edition and requires macOS 14 or newer. The app's Apple
 verification warning still applies.
 
-## Use
+**Linux** — download the installer, then run it:
+
+```sh
+curl -fL https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/install-linux.sh -o install-linux.sh
+sh install-linux.sh
+```
+
+It verifies the selected archive, adds an applications-menu entry, and installs
+per user. See [Linux requirements and manual installation](packaging/compatibility/LINUX-INSTALL.txt).
+
+**Windows** — run in PowerShell:
+
+```powershell
+Invoke-WebRequest https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/install-windows.ps1 -UseBasicParsing -OutFile "$env:TEMP\console-view-install.ps1"
+powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\console-view-install.ps1"
+```
+
+It verifies the x86/x64 installer and installs for the current user.
+See [Windows requirements](packaging/compatibility/WINDOWS-INSTALL.txt).
+
+**Older Intel Mac** — no Homebrew required:
+
+```sh
+curl -fL https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/install-macos.sh -o install-macos.sh
+sh install-macos.sh
+```
+
+It verifies the DMG and app signature, installs in `~/Applications`, and refuses
+to overwrite an existing Console View app. See [legacy Mac installation](packaging/compatibility/MACOS-INSTALL.txt).
+
+## Use the native Mac app
 
 - **Home source card**: one connected card shows **Click to view** and opens immediately. Several cards show **Click to choose a capture card**, followed by a **View** button for each source.
 - **Capture → Change Source** in the macOS menu bar lists available cards for quick switching.
@@ -124,6 +179,26 @@ Hardware-specific MS2109 audio correction requires an identified device and
 the affected audio format; other cards use ordinary audio playback.
 
 The native app is in `Sources/`. The original PS4 View project remains separate.
+
+## Compatibility edition
+
+The compatibility app is a separate Qt 5.15/C++ implementation in `compatibility/`.
+It uses the operating system's capture drivers, remembers your selected card,
+reconnects automatically, and opens a single source directly. Full screen hides
+controls and returns with Escape. Automatic quality chooses the largest supported
+image, then the fastest frame rate at that resolution.
+
+Select the capture card's **audio input in Settings** once. This edition does not
+guess which microphone belongs to a camera. Windows N editions need Microsoft's
+Media Feature Pack. Linux needs accessible V4L2 devices and GStreamer capture
+plugins; the installer checks these dependencies. A running camera driver cannot
+prove that the console is supplying an HDMI signal.
+
+See [compatibility build instructions](compatibility/README.md) and
+[packaging checks](packaging/compatibility/README.md). Qt and bundled third-party
+libraries retain their own licenses and replacement rights; those licenses and
+matching-source instructions are included in every package. The compatibility
+release includes a [corresponding library source archive](https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/Console-View-1.0.0-Corresponding-Sources.tar).
 
 ## Contribute
 

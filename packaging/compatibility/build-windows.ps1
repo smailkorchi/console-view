@@ -49,6 +49,7 @@ Copy-Item "$runtime/*.dll" $portable
 # Windows10+ supplies UCRT. Keep VC runtime app-local; do not install system prerequisites.
 Copy-Item LICENSE "$portable/LICENSE.txt"
 Copy-Item packaging/compatibility/licenses $portable -Recurse
+Copy-Item packaging/compatibility/QT-5.15.2-THIRD-PARTY-LICENSES.txt "$portable/licenses/"
 Copy-Item packaging/compatibility/THIRD-PARTY-NOTICES.txt,packaging/compatibility/QT-SOURCE-OFFER.txt,packaging/compatibility/REPLACING-QT.txt,packaging/compatibility/WINDOWS-INSTALL.txt $portable
 @('[Paths]','Prefix=.','Plugins=.') | Set-Content "$portable/qt.conf" -Encoding ascii
 $qtVersion = & "$QtDir/bin/qmake.exe" -query QT_VERSION

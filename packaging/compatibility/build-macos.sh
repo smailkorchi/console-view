@@ -70,6 +70,7 @@ done
 mkdir -p "$app/Contents/Resources/legal"
 cp LICENSE "$app/Contents/Resources/legal/LICENSE.txt"
 cp packaging/compatibility/THIRD-PARTY-NOTICES.txt packaging/compatibility/QT-SOURCE-OFFER.txt packaging/compatibility/REPLACING-QT.txt "$app/Contents/Resources/legal/"
+cp packaging/compatibility/QT-5.15.2-THIRD-PARTY-LICENSES.txt "$app/Contents/Resources/legal/"
 cp -R packaging/compatibility/licenses "$app/Contents/Resources/legal/"
 cp packaging/compatibility/MACOS-INSTALL.txt "$app/Contents/Resources/"
 cp packaging/compatibility/install-macos.sh "$output/install-macos.sh"

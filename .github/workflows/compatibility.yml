@@ -1,0 +1,129 @@
+name: Compatibility packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Platform to build and verify
+        type: choice
+        default: all
+        options: [all, linux, windows, legacy-macos]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: compatibility-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  QT_VERSION: '5.15.2'
+  PACKAGE_VERSION: '1.0.0'
+
+jobs:
+  windows:
+    if: inputs.platform == 'all' || inputs.platform == 'windows'
+    name: Windows ${{ matrix.arch }}
+    runs-on: windows-2022
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86
+            qt_arch: win32_msvc2019
+            qt_directory: msvc2019
+          - arch: x64
+            qt_arch: win64_msvc2019_64
+            qt_directory: msvc2019_64
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Install Qt and installer tools
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $PSNativeCommandUseErrorActionPreference = $true
+          python -m pip install aqtinstall==3.3.0 Pillow==11.3.0
+          python -m aqt install-qt windows desktop $env:QT_VERSION ${{ matrix.qt_arch }} -O "$env:RUNNER_TEMP/Qt" --archives qtbase qtmultimedia qtsvg qttools
+          $installer = "$env:RUNNER_TEMP/innosetup.exe"
+          Invoke-WebRequest 'https://github.com/jrsoftware/issrc/releases/download/is-6_7_3/innosetup-6.7.3.exe' -OutFile $installer
+          if ((Get-FileHash $installer -Algorithm SHA256).Hash.ToLower() -ne '9c73c3bae7ed48d44112a0f48e66742c00090bdb5bef71d9d3c056c66e97b732') { throw 'Inno Setup checksum mismatch' }
+          $process = Start-Process $installer -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART',"/DIR=$env:RUNNER_TEMP/InnoSetup" -Wait -PassThru
+          if ($process.ExitCode -ne 0) { throw "Inno Setup installation failed: $($process.ExitCode)" }
+      - name: Build, deploy, and test portable and installed packages
+        shell: pwsh
+        run: |
+          ./packaging/compatibility/build-windows.ps1 -Arch '${{ matrix.arch }}' -QtDir "$env:RUNNER_TEMP/Qt/$env:QT_VERSION/${{ matrix.qt_directory }}" -InnoCompiler "$env:RUNNER_TEMP/InnoSetup/ISCC.exe" -Version $env:PACKAGE_VERSION
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: console-view-windows-${{ matrix.arch }}
+          path: dist/compatibility/windows-${{ matrix.arch }}/*
+          if-no-files-found: error
+          retention-days: 14
+
+  legacy-macos:
+    if: inputs.platform == 'all' || inputs.platform == 'legacy-macos'
+    name: Intel macOS 10.13 baseline
+    runs-on: macos-15-intel
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Install Qt 5.15.2
+        run: |
+          python -m pip install aqtinstall==3.3.0 -r scripts/dmg-requirements.txt
+          python -m aqt install-qt mac desktop "$QT_VERSION" clang_64 -O "$RUNNER_TEMP/Qt" --archives qtbase qtmultimedia qtsvg qttools
+      - name: Build, deploy, check every Mach-O, and test DMG contents
+        env:
+          QT_DIR: ${{ runner.temp }}/Qt/5.15.2/clang_64
+        run: bash packaging/compatibility/build-macos.sh "$PACKAGE_VERSION"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: console-view-macos-intel-legacy
+          path: dist/compatibility/macos-intel/*
+          if-no-files-found: error
+          retention-days: 14
+
+  linux:
+    if: inputs.platform == 'all' || inputs.platform == 'linux'
+    name: Linux ${{ matrix.arch }} / ${{ matrix.libc }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {arch: x86_64, libc: glibc, platform: linux/amd64, runner: ubuntu-24.04}
+          - {arch: arm64, libc: glibc, platform: linux/arm64, runner: ubuntu-24.04-arm}
+          - {arch: i386, libc: glibc, platform: linux/386, runner: ubuntu-24.04}
+          - {arch: armhf, libc: glibc, platform: linux/arm/v7, runner: ubuntu-24.04-arm}
+          - {arch: x86_64, libc: musl, platform: linux/amd64, runner: ubuntu-24.04}
+          - {arch: arm64, libc: musl, platform: linux/arm64, runner: ubuntu-24.04-arm}
+          - {arch: i386, libc: musl, platform: linux/386, runner: ubuntu-24.04}
+          - {arch: armhf, libc: musl, platform: linux/arm/v7, runner: ubuntu-24.04-arm}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+        with:
+          platforms: arm,386
+      - name: Build, deploy, and verify Linux package
+        run: |
+          if [ '${{ matrix.libc }}' = glibc ]; then
+            image='debian:bullseye-slim@sha256:e5b6442dd2e9684cf5e87d8338b5968f3b348636fc0be6d7850a381e3731a2bd'
+            script='packaging/compatibility/build-linux.sh'
+          else
+            image='alpine:3.22@sha256:5291449c3df73caf6ed85e649dec1b9e818b39a5d8c871e97afc13e9cd5e8fa8'
+            script='packaging/compatibility/build-alpine.sh'
+          fi
+          docker run --rm --platform '${{ matrix.platform }}' -e PACKAGE_VERSION -v "$GITHUB_WORKSPACE:/work" -w /work "$image" sh -c "command -v bash >/dev/null || apk add --no-cache bash; exec bash $script"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: console-view-linux-${{ matrix.arch }}-${{ matrix.libc }}
+          path: dist/compatibility/${{ matrix.libc == 'musl' && 'linux-musl' || 'linux' }}-${{ matrix.arch }}/*
+          if-no-files-found: error
+          retention-days: 14

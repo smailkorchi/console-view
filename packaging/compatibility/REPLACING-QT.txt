@@ -1,0 +1,35 @@
+Using modified Qt shared libraries
+
+Quit Console View before replacing libraries. Keep a copy of the original package
+so replacement is reversible. Rebuild the matching Qt source with shared-library
+support and the same architecture/Qt5 ABI. The source locations and exact Linux
+versions are in QT-SOURCE-OFFER.txt and qt-package-versions.txt.
+
+Windows: replace Qt5*.dll and the relevant plugin DLLs beside consoleview.exe and
+in platforms/, mediaservice/, audio/, iconengines/, or imageformats/. Build Qt5.15.2
+with the matching MSVC2019-compatible x86 or x64 toolchain. qt.conf keeps plugin
+loading relative to the application. Run consoleview.exe --smoke-test to check
+startup without opening a capture device.
+
+Intel macOS: right-click the app and choose Show Package Contents. Replace Qt
+frameworks in Contents/Frameworks and plugins in Contents/PlugIns with x86_64
+shared builds targeting macOS10.13. Preserve relative install names or rerun
+macdeployqt. Changed code invalidates its original signature; sign your modified
+local bundle with: codesign --force --deep --sign - "Console View.app". You control
+that replacement signature. Run Contents/MacOS/consoleview --smoke-test to check
+startup. A signature is not evidence of notarization or capture compatibility.
+
+Linux portable archive: replace lib/libQt5*.so.* and matching plugins/ libraries.
+The launcher sets relative library/plugin paths; host GStreamer remains dynamic.
+For a .deb installation, install your compatible Qt packages or run the executable
+with LD_LIBRARY_PATH pointing to your shared Qt build and QT_PLUGIN_PATH pointing
+to that build's plugins. Use --smoke-test for startup. No fixed checksum, mandatory
+signature, or DRM prevents replacement of Qt.
+
+The application source and CMake build are in compatibility/ in the repository
+distributed with Console View. The packaging scripts record the platform build
+and deployment options. Build the application against your replacement Qt with:
+  cmake -S compatibility -B build -DCMAKE_PREFIX_PATH=<your-Qt-prefix>
+  cmake --build build --config Release
+Qt library changes must preserve the API/ABI the application calls. Startup smoke
+does not validate a physical HDMI capture card or audio path.

@@ -1,0 +1,36 @@
+Corresponding Qt source for Console View compatibility packages
+
+Windows and Intel macOS use the unmodified Qt 5.15.2 open-source SDK. Its complete
+source, including third-party material, build configuration, and license texts,
+is available without charge from the Qt Project:
+
+https://download.qt.io/archive/qt/5.15/5.15.2/single/qt-everywhere-src-5.15.2.tar.xz
+https://download.qt.io/archive/qt/5.15/5.15.2/submodules/
+
+This is the matching source version, not a pointer to a newer Qt release. The
+application links only the LGPL-eligible modules listed in THIRD-PARTY-NOTICES.txt.
+No Qt source modification is made by Console View. The deployment tools relocate
+library search paths for the package.
+
+For Linux, the included qt-package-versions.txt records the exact Debian package
+versions. Their complete corresponding source, including Debian patches, is
+available from Debian's source repositories and source archive:
+
+https://sources.debian.org/src/qtbase-opensource-src/
+https://sources.debian.org/src/qtmultimedia-opensource-src/
+https://sources.debian.org/src/qtsvg-opensource-src/
+https://snapshot.debian.org/
+
+Enable deb-src for the matching distribution and run apt-get source with the exact
+recorded version, for example:
+  apt-get source libqt5core5a=<recorded-version>
+  apt-get source libqt5multimedia5=<recorded-version>
+  apt-get source libqt5svg5=<recorded-version>
+These commands fetch source; they do not install or replace runtime libraries.
+
+Recipients may request the corresponding Qt source from the Console View
+distributor through the same repository/release channel used to obtain this
+package. The source offer remains valid for at least three years after that
+package's last distribution and while replacement/support for it is offered.
+Provide the package version, platform, and qt-package-versions.txt when present.
+The distributor must retain the matching source when publishing these packages.

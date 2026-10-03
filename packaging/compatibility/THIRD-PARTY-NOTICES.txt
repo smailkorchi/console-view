@@ -1,0 +1,26 @@
+Console View compatibility edition uses dynamically linked Qt 5.15 libraries.
+Qt is copyright The Qt Company Ltd. and other contributors.
+
+The linked Qt modules are Qt Core, GUI, Widgets, Multimedia, Multimedia Widgets,
+SVG, and the non-GPL-only dependencies loaded by those modules and their platform
+plugins. They are used under GNU Lesser General Public License version 3.
+The full LGPLv3 and GPLv3 texts are included in licenses/. Additional upstream
+license texts are included for reference; their presence does not change the
+application's chosen Qt license. The matching complete Qt source contains its
+third-party copyright notices and licenses.
+
+Qt libraries are shared libraries, not statically linked into Console View.
+You may replace or modify those libraries and run the application with compatible
+modified libraries. Reverse engineering for debugging your library modifications
+is permitted. No application restriction overrides these rights.
+
+See QT-SOURCE-OFFER.txt for corresponding source and REPLACING-QT.txt for library
+replacement, rebuild, and installation instructions.
+
+Linux uses the operating system's dynamically linked GStreamer and graphics/audio
+libraries. Their licenses and source are supplied by the distribution packages;
+this archive does not bundle GStreamer plugins, codecs, libc, or a kernel driver.
+
+Windows packages additionally contain app-local redistributable Microsoft Visual
+C++ runtime files from Visual Studio. Windows 10 and newer supply the Universal
+CRT. Microsoft runtime files remain governed by their redistribution terms.

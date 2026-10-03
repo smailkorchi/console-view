@@ -1,0 +1,39 @@
+Console View for Windows
+
+Use the Setup.exe installer for a per-user installation with a Start menu entry.
+It does not require administrator access. Alternatively, extract the complete
+Portable.zip folder and open consoleview.exe. Keep the DLL/plugin folders together.
+Qt and the Visual C++ runtime are included. Windows10+ supplies Universal CRT.
+The installer and app are unsigned. Windows may display a SmartScreen warning.
+
+Windows10 and Windows11: choose x86 for 32-bit Windows, or x64 for 64-bit Windows.
+There is no native ARM64 package. Windows11 ARM64 can run x64 software through
+emulation, but capture hardware operation under emulation has not been verified.
+Windows7, Windows8, and Windows8.1 are not supported by these packages.
+Windows10/11 N editions require Microsoft's Media Feature Pack. Install it from
+Settings > Apps > Optional Features, then restart Windows. Capture plugins need
+the operating system's Media Foundation components; Console View does not bundle
+or replace those system files. Microsoft instructions:
+https://support.microsoft.com/en-us/windows/experience/platform-variants/media-feature-pack-for-windows-10-11-n-february-2023
+CI verifies PE architecture, deployed DLL imports, Qt plugins, extracted ZIP
+startup, per-user install, installed startup, and uninstall on Windows Server2022.
+Those checks do not certify a physical capture card or every Windows installation.
+
+Terminal installation (Windows PowerShell5.1 or PowerShell7):
+  Invoke-WebRequest https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/install-windows.ps1 -UseBasicParsing -OutFile "$env:TEMP\console-view-install.ps1"
+  powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\console-view-install.ps1"
+The installer script chooses x86/x64 from the operating-system architecture,
+checks the selected Setup.exe against the release's SHA256SUMS.txt before running
+it, and installs only for the current user. ExecutionPolicy Bypass affects that
+PowerShell process only; it does not change the saved machine/user policy.
+Checksums detect corrupted downloads; they do not replace publisher signing.
+Uninstall Console View from Windows Settings > Apps. For a portable copy, quit the
+app and delete its extracted folder; no global runtime or PATH change is made.
+
+Connect a class-compliant external HDMI capture card, then open Console View.
+Allow camera access for desktop apps in Windows privacy settings. Compatibility
+audio uses an explicitly selected capture audio input. Select the capture card's
+audio input in Settings; do not select the computer's microphone as console audio.
+
+The included LGPL notice, matching-source offer, and library replacement guide
+apply to the dynamically linked Qt runtime shipped in this folder.

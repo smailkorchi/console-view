@@ -1,0 +1,58 @@
+Console View for Linux
+
+Terminal installer (download, inspect if desired, then run):
+  curl -fL https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/install-linux.sh -o install-linux.sh
+  sh install-linux.sh
+
+The installer detects userspace architecture and libc, verifies the release archive's
+SHA-256 checksum before extraction, checks the executable architecture, validates
+required files, checks host dependencies, and runs an offscreen startup check before
+installing the application. It installs per user under XDG_DATA_HOME/console-view
+(default ~/.local/share/console-view), with ~/.local/bin/consoleview and an application
+menu entry. Add ~/.local/bin to PATH if your desktop has not already done so.
+
+If dependencies are missing, apt, dnf, zypper, pacman or apk asks to install normal
+distribution packages. sudo/doas is used only for these system packages. No security
+settings, device permissions or unrelated files are changed. --no-dependencies
+leaves system packages unchanged; --yes accepts package-manager confirmation.
+--prefix /absolute/directory installs bin/ and share/ under a chosen prefix.
+
+Debian/Ubuntu .deb: install with apt so multimedia dependencies are added:
+  sudo apt install ./Console-View-1.0.0-Linux-<architecture>.deb
+
+Portable archives: extract the complete Console-View directory, run
+./check-dependencies, then ./consoleview. Do not move only bin/consoleview.
+These are Qt-bundled archives, not AppImages or dependency-free executables.
+Dynamically linked Qt, ICU and selected Qt ABI dependencies are bundled and replaceable.
+GStreamer, graphics drivers, audio libraries and libc remain host dependencies.
+The launcher uses X11; Wayland desktops need XWayland enabled. Native Wayland and
+headless operation are not claimed. --smoke-test checks startup without capture.
+
+Build families:
+- Linux-<architecture>: Debian 11 baseline, glibc >= 2.31, libstdc++ from GCC10+.
+- Linux-Musl-<architecture>: Alpine 3.22 baseline, musl >= 1.2.5 and Alpine 3.22+
+  compatible host multimedia libraries. This is a separate native musl executable.
+Architectures: x86_64, arm64, i386 (SSE2-capable CPU), armhf (ARMv7 hard-float).
+Architecture means installed userspace, which can be 32-bit on a 64-bit kernel.
+Distributions outside these ABI/architecture baselines require a source build.
+
+Capture plugins required on every distribution: camerabin, wrappercamerabinsrc,
+and v4l2src. The kernel must expose the capture card as an accessible video device.
+Debian/Ubuntu: gstreamer1.0-tools, gstreamer1.0-plugins-base/good/bad.
+Fedora: gstreamer1, gstreamer1-plugins-base/good/bad-free.
+openSUSE: gstreamer-utils, gstreamer-plugins-base/good/bad.
+Arch: gstreamer, gst-plugins-base/good/bad.
+Alpine: gstreamer-tools, gst-plugins-base/good/bad.
+Other distributions need equivalent desktop/media libraries installed manually.
+
+LICENSE.txt is the application's Free Use License. licenses/ preserves Qt license
+texts and notices for bundled ABI libraries. qt-package-versions.txt records exact
+Qt versions; bundled-libraries.json records each bundled library's corresponding
+source package/version and source URL (including Alpine's exact source commit).
+Matching source instructions and library replacement rights are in QT-SOURCE-OFFER.txt
+and REPLACING-QT.txt. The .deb installs legal documents under
+/usr/share/doc/console-view-compatibility/.
+
+Startup, ABI and package checks do not certify a physical capture card, audio timing,
+GPU drivers, or every Linux distribution. Device availability depends on the kernel
+and the card. Audio input is selected separately and restored on later launches.

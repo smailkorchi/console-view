@@ -1,0 +1,5 @@
+<RCC><qresource prefix="/">
+<file alias="AppIcon.png">../../icon/icon_1024.png</file>
+<file alias="github.svg">github.svg</file>
+<file alias="instagram.svg">instagram.svg</file>
+</qresource></RCC>

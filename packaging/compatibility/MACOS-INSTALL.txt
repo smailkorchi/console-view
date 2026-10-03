@@ -1,0 +1,47 @@
+Console View for legacy Intel macOS
+
+Open the DMG and drag Console View.app onto Applications. The DMG has no installer.
+This compatibility edition targets Intel macOS 10.13 or later. Apple Silicon Macs
+should use the native Console View edition. Both editions use the original artwork.
+If Console View is already installed, keep it separately before copying this
+edition: both editions use the app filename Console View.app. PS4 View is separate.
+
+Terminal installation on High Sierra or later
+
+Download install-macos.sh from the v1.0.0-compatibility GitHub release, inspect it,
+then run it:
+
+  curl -fL --proto '=https' --tlsv1.2 https://github.com/smailkorchi/console-view/releases/download/v1.0.0-compatibility/install-macos.sh -o install-macos.sh
+  less install-macos.sh
+  sh install-macos.sh
+
+It downloads the versioned Intel DMG and SHA256SUMS-macOS-Intel-10.13.txt from that
+release, checks SHA-256, verifies the DMG and bundle signature, and copies the app
+to ~/Applications. It refuses to replace an existing Console View.app and does
+not launch the app. It uses macOS system tools; Python, Qt and Homebrew are not
+needed on the destination Mac. To choose a writable Applications folder:
+
+  sh install-macos.sh --destination /Applications
+
+The script never requests administrator access or changes security settings.
+
+This package is ad-hoc signed, not Developer ID signed or notarized. Gatekeeper
+may block an internet-downloaded app. SHA-256 establishes download integrity;
+it does not establish Apple trust. Review a blocked app through the normal
+macOS security controls. Neither installation method bypasses those controls.
+
+The build rejects bundled Mach-O files with a minimum OS newer than 10.13, an
+unresolved library, or a dependency outside the app and macOS system libraries.
+The build also rejects unguarded newer API use in our source and records the
+prebuilt libraries' imported symbols. Policy, audio-buffer and startup tests run
+on the macOS 15 Intel CI runner, with startup repeated in the deployed and mounted
+app. This does not certify every system symbol or runtime behavior on 10.13.
+An actual High Sierra launch and physical capture/audio/reconnect remain separate
+checks requiring that Mac and its capture hardware.
+
+Connect an external HDMI capture card and open Console View. Camera/Microphone
+privacy permissions apply where supported by your macOS version. Choose the
+capture card's audio input in Settings when you need sound.
+
+Qt 5.15.2 is dynamically bundled. LGPL notices, corresponding-source information
+and replacement instructions are inside the app at Contents/Resources/legal/.

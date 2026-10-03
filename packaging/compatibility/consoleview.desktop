@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Console View
+Comment=View your console through an HDMI capture card
+Exec=consoleview
+Icon=consoleview
+Terminal=false
+Categories=AudioVideo;Video;

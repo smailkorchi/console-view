@@ -46,6 +46,12 @@ smoke() {
         -u DYLD_LIBRARY_PATH -u DYLD_FRAMEWORK_PATH -u DYLD_FALLBACK_LIBRARY_PATH \
         -u DYLD_FALLBACK_FRAMEWORK_PATH QT_QPA_PLATFORM=offscreen \
         "$bundle/Contents/MacOS/consoleview" --smoke-test >> "$output/startup-smoke.txt" 2>&1
+    printf '%s Cocoa startup smoke (no camera discovery or capture)\n' "$label" >> "$output/startup-smoke.txt"
+    env -u QT_PLUGIN_PATH -u QML2_IMPORT_PATH -u QT_QPA_PLATFORM_PLUGIN_PATH \
+        -u DYLD_LIBRARY_PATH -u DYLD_FRAMEWORK_PATH -u DYLD_FALLBACK_LIBRARY_PATH \
+        -u DYLD_FALLBACK_FRAMEWORK_PATH QT_QPA_PLATFORM=cocoa CONSOLE_VIEW_SMOKE_IMAGE="$output/home-cocoa.png" \
+        "$bundle/Contents/MacOS/consoleview" --smoke-test >> "$output/startup-smoke.txt" 2>&1
+    printf '%s Cocoa startup smoke passed\n' "$label" >> "$output/startup-smoke.txt"
 }
 : > "$output/startup-smoke.txt"
 smoke "$build/cmake/consoleview.app" 'Before deployment'

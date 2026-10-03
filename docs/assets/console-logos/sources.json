@@ -1,0 +1,225 @@
+{
+  "retrieved_date": "2026-10-03",
+  "purpose": "Unmodified logo references for Console View banner. These do not imply affiliation, endorsement, tested hardware, or exhaustive console support.",
+  "copyright_note": "Each linked Commons file page lists the artwork as public domain for simple shapes/text (PD-shape for Steam). This is the source assessment, not a trademark license.",
+  "trademark_note": "All brand marks remain trademarks of their respective owners.",
+  "recommended_pngs": [
+    "playstation.png",
+    "xbox.png",
+    "nintendo.png",
+    "nintendo-switch-transparent.png",
+    "steam.png",
+    "sega.png",
+    "atari.png",
+    "neo-geo.png"
+  ],
+  "sources": [
+    {
+      "family": "PlayStation",
+      "brand_owner": "Sony Interactive Entertainment",
+      "source_page": "https://commons.wikimedia.org/wiki/File:PlayStation_logo.svg",
+      "provenance": "Sony; Commons cites playstation.com.",
+      "assets": [
+        {
+          "file": "playstation.svg",
+          "url": "https://upload.wikimedia.org/wikipedia/commons/0/00/PlayStation_logo.svg",
+          "sha256": "3830b8eb1536cdc6933a8caa737fd0ceb23099dad77d2df0e5bae4d993d93427"
+        },
+        {
+          "file": "playstation.png",
+          "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/PlayStation_logo.svg/960px-PlayStation_logo.svg.png",
+          "size_px": [
+            960,
+            744
+          ],
+          "transparent_pixels": 442983,
+          "sha256": "05923d9aa553144cadb4a846f5a6e8b1e8abfa70d3dc2c0167dd38eb1a001933"
+        }
+      ],
+      "edits": "None; PNG is Wikimedia raster preview of the original vector."
+    },
+    {
+      "family": "Xbox",
+      "brand_owner": "Microsoft",
+      "source_page": "https://commons.wikimedia.org/wiki/File:XBOX_logo_2012.svg",
+      "provenance": "Commons combines Xbox one logo.svg and Xbox wordmark.svg; author Microsoft.",
+      "assets": [
+        {
+          "file": "xbox.svg",
+          "url": "https://upload.wikimedia.org/wikipedia/commons/8/8c/XBOX_logo_2012.svg",
+          "sha256": "1a2fc5ddc543e276d7cc988b430f71d1d5dbba4ee1d7a4398923404a8382374f"
+        },
+        {
+          "file": "xbox.png",
+          "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/XBOX_logo_2012.svg/960px-XBOX_logo_2012.svg.png",
+          "size_px": [
+            960,
+            292
+          ],
+          "transparent_pixels": 197221,
+          "sha256": "7d3424fb3d3aa302d6fdabfd999e44b22b5f3abf12fa180ff1db5e5e828294d1"
+        }
+      ],
+      "edits": "None; PNG is Wikimedia raster preview of the original vector."
+    },
+    {
+      "family": "Nintendo",
+      "brand_owner": "Nintendo",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Nintendo_red_logo.svg",
+      "provenance": "Authentic retro racetrack wordmark extracted from Nintendo DS Elite Beat Agents manual page 1; not a newly drawn logo.",
+      "assets": [
+        {
+          "file": "nintendo.svg",
+          "url": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Nintendo_red_logo.svg",
+          "sha256": "6153181fe545fa01234b02d49576462d0369d7e93f080139c38e0a99be694dc7"
+        },
+        {
+          "file": "nintendo.png",
+          "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Nintendo_red_logo.svg/960px-Nintendo_red_logo.svg.png",
+          "size_px": [
+            960,
+            237
+          ],
+          "transparent_pixels": 11925,
+          "sha256": "71cf95ab3773cd138074fb3c58b4b6166f64c971242176776a6f8575d5dd50bd"
+        }
+      ],
+      "edits": "None; PNG is Wikimedia raster preview of the original vector."
+    },
+    {
+      "family": "Nintendo Switch",
+      "brand_owner": "Nintendo",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Nintendo_Switch_Logo.svg",
+      "provenance": "Transparent logo; Commons cites Nintendo.co.uk and Nintendo as author.",
+      "assets": [
+        {
+          "file": "nintendo-switch-transparent.svg",
+          "url": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Nintendo_Switch_Logo.svg",
+          "sha256": "f718c2d66a8644160909b1f6eb12c83d28011b1a4490d0c7659ddc86ebf0324c"
+        },
+        {
+          "file": "nintendo-switch-transparent.png",
+          "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Nintendo_Switch_Logo.svg/960px-Nintendo_Switch_Logo.svg.png",
+          "size_px": [
+            960,
+            960
+          ],
+          "transparent_pixels": 702021,
+          "sha256": "78c6ae215fa2b19dc0049b9ad4f6352114c694c621e0abaad58bf2b13a622116"
+        }
+      ],
+      "edits": "None; PNG is Wikimedia raster preview of the original vector.",
+      "additional_original_references": [
+        {
+          "file": "nintendo-switch-official.svg",
+          "url": "https://www.nintendo.co.jp/common/v2/img/ncommon/_common/logo/switch.svg",
+          "note": "Official downloaded artwork includes original red square background."
+        },
+        {
+          "file": "nintendo-switch.svg",
+          "url": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Nintendo_Switch_logo.svg"
+        },
+        {
+          "file": "nintendo-switch.png",
+          "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/Nintendo_Switch_logo.svg/960px-Nintendo_Switch_logo.svg.png"
+        }
+      ]
+    },
+    {
+      "family": "Steam / Steam Deck family",
+      "brand_owner": "Valve",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Steam_icon_logo.svg",
+      "provenance": "Commons combination of Steam Icon 2014 and Steam logo.svg; author Steam.",
+      "assets": [
+        {
+          "file": "steam.svg",
+          "url": "https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg",
+          "sha256": "f9dfd02f603715cb12a8b0530e0c4dec21ecf4104c053bf62dd8139f19ea47af"
+        },
+        {
+          "file": "steam.png",
+          "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/960px-Steam_icon_logo.svg.png",
+          "size_px": [
+            960,
+            960
+          ],
+          "transparent_pixels": 217994,
+          "sha256": "fc6a76f0db4175625dbbdcff2fe90f1151bd0bbdbcb274a0395ed385a463f85c"
+        }
+      ],
+      "edits": "None; PNG is Wikimedia raster preview of the original vector."
+    },
+    {
+      "family": "SEGA",
+      "brand_owner": "SEGA",
+      "source_page": "https://commons.wikimedia.org/wiki/File:SEGA_logo.svg",
+      "provenance": "Commons source archived keaneideas.com/keane_portfolio.pdf; author SEGA.",
+      "assets": [
+        {
+          "file": "sega.svg",
+          "url": "https://upload.wikimedia.org/wikipedia/commons/1/13/SEGA_logo.svg",
+          "sha256": "1318476f255d611d39ff67f1e5d4cb5891a35e35fcaf77885873c191b26148a9"
+        },
+        {
+          "file": "sega.png",
+          "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/SEGA_logo.svg/960px-SEGA_logo.svg.png",
+          "size_px": [
+            960,
+            320
+          ],
+          "transparent_pixels": 31391,
+          "sha256": "859c1ed6bab397d08d6fde6a043348cebef405869c4383f565a7520dca481cf9"
+        }
+      ],
+      "edits": "None; PNG is Wikimedia raster preview of the original vector."
+    },
+    {
+      "family": "Atari",
+      "brand_owner": "Atari",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Atari_logo_alt.svg",
+      "provenance": "Original Fuji logo by George Opperman, circa 1972\u201373, per Commons; historical Atari/Atari Corporation mark.",
+      "assets": [
+        {
+          "file": "atari.svg",
+          "url": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Atari_logo_alt.svg",
+          "sha256": "027fa78fdd8ff272f9d4bb4a97b8b8fa683539b1fd6c2abb425ae30657bc4cbd"
+        },
+        {
+          "file": "atari.png",
+          "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/Atari_logo_alt.svg/960px-Atari_logo_alt.svg.png",
+          "size_px": [
+            960,
+            1144
+          ],
+          "transparent_pixels": 744802,
+          "sha256": "fa4ab152160133f5b6502c95a78cfcb0fb8f06ddd33e2440653f3ce686898844"
+        }
+      ],
+      "edits": "None; PNG is Wikimedia raster preview of the original vector."
+    },
+    {
+      "family": "Neo Geo / SNK",
+      "brand_owner": "SNK",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Neo_Geo_logo.svg",
+      "provenance": "Commons reproduction by Shad-dim; source German Wikipedia/Seeklogo; author listed Shad-dim SNK.",
+      "assets": [
+        {
+          "file": "neo-geo.svg",
+          "url": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Neo_Geo_logo.svg",
+          "sha256": "3b7225f570d2c4b109a68a3c99bce66b874848497000a8b6a74a9285cc5e7fc0"
+        },
+        {
+          "file": "neo-geo.png",
+          "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/Neo_Geo_logo.svg/960px-Neo_Geo_logo.svg.png",
+          "size_px": [
+            960,
+            960
+          ],
+          "transparent_pixels": 236892,
+          "sha256": "e9ae4efa051ac135587853a61fd5fcabd539b3df10ba634ea808ea79d510ee6e"
+        }
+      ],
+      "edits": "None; PNG is Wikimedia raster preview of the original vector."
+    }
+  ]
+}

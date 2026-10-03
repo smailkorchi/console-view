@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>CFBundleExecutable</key><string>consoleview</string>
+  <key>CFBundleIdentifier</key><string>local.ismail.consoleview</string>
+  <key>CFBundleName</key><string>Console View</string>
+  <key>CFBundleDisplayName</key><string>Console View</string>
+  <key>CFBundleIconFile</key><string>PS4View</string>
+  <key>CFBundlePackageType</key><string>APPL</string>
+  <key>CFBundleShortVersionString</key><string>1.0.0</string>
+  <key>CFBundleVersion</key><string>1</string>
+  <key>LSMinimumSystemVersion</key><string>14.0</string>
+  <key>LSApplicationCategoryType</key><string>public.app-category.entertainment</string>
+  <key>NSHighResolutionCapable</key><true/>
+  <key>NSCameraUsageDescription</key><string>Console View uses your HDMI capture card to display the connected console.</string>
+  <key>NSMicrophoneUsageDescription</key><string>Console View uses your capture card's audio input to play the connected console's sound.</string>
+</dict></plist>

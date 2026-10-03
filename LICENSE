@@ -1,0 +1,41 @@
+Console View Free Use License 1.0
+Copyright (c) 2026 smailkorchi and contributors
+
+1. Permission
+You may use, copy, inspect, modify, and contribute to this software without
+charge, including for personal use and internal use by a business. You may
+redistribute the original or modified software, in source or executable form,
+only under the conditions below.
+
+2. Free redistribution and no resale
+You must not sell, resell, charge a license fee for, or place paid access to
+copies of this software or modified versions. You must not include the
+software in a paid bundle as a product being sold. This restriction applies
+to source code and executable distributions, including renamed versions.
+Separate written permission from the relevant copyright holders is required
+for an exception.
+
+Optional donations are permitted if access to the software does not depend
+on payment. You may charge for separately identified installation, training,
+custom development, or support services, provided the charge is for the service
+and the software itself remains available without charge under this license.
+
+3. Attribution and modifications
+Redistributions must retain this license and copyright notice. Modified
+versions must identify their changes and remain under this license. You may
+not imply that an unofficial version is endorsed by the original maintainers.
+
+4. Third-party materials
+This license covers only rights held by the software's contributors. It does
+not grant rights to third-party artwork, trademarks, libraries, or other
+materials. Their respective rights and licenses continue to apply.
+
+5. No warranty
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE, AND NONINFRINGEMENT. TO THE EXTENT PERMITTED BY APPLICABLE LAW, THE
+COPYRIGHT HOLDERS AND CONTRIBUTORS ARE NOT LIABLE FOR CLAIMS, DAMAGES, OR
+OTHER LIABILITY ARISING FROM THE SOFTWARE OR ITS USE.
+
+This is a custom source-available license, not an OSI-approved open-source
+license. Public source availability does not remove the no-resale condition.

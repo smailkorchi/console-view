@@ -70,12 +70,15 @@ while pending:
     if binary in seen:
         continue
     seen.add(binary)
+    dynamic = subprocess.check_output(['readelf', '--dynamic', str(binary)], text=True)
+    direct = set(re.findall(r'Shared library:\s+\[([^]]+)\]', dynamic))
     dependencies = subprocess.check_output(['ldd', str(binary)], text=True, env=environment, stderr=subprocess.STDOUT)
     if 'not found' in dependencies:
         raise SystemExit(f'Unresolved dependency in {binary}:\n{dependencies}')
     for soname, resolved in re.findall(r'^\s*(\S+) => (\S+)', dependencies, re.M):
         if not soname.startswith(('libQt5', 'libicu', 'libdouble-conversion', 'libpcre2-16', 'libjpeg')):
-            external.add(soname)
+            if soname in direct:
+                external.add(soname)
             continue
         target = directory/'lib'/soname
         if not target.exists():

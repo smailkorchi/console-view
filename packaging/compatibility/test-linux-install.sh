@@ -12,10 +12,10 @@ archive=Console-View-1.0.0-Linux-x86_64-Portable.tar.xz
 . /etc/os-release
 printf 'Testing Console View terminal installation on %s (%s).\n' "$PRETTY_NAME" "$(uname -m)"
 case "$ID ${ID_LIKE:-}" in
-  *debian*|*ubuntu*) apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install -y curl ca-certificates xz-utils tar coreutils ;;
-  *fedora*|*rhel*) dnf install -y curl ca-certificates xz tar coreutils glibc-common ;;
-  *arch*) pacman -Syu --noconfirm --needed curl ca-certificates xz tar coreutils ;;
-  *suse*) zypper --non-interactive refresh; zypper --non-interactive install curl ca-certificates xz tar coreutils ;;
+  *debian*|*ubuntu*) apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install -y curl ca-certificates xz-utils tar coreutils findutils ;;
+  *fedora*|*rhel*) dnf install -y curl ca-certificates xz tar coreutils findutils glibc-common ;;
+  *arch*) pacman -Syu --noconfirm --needed curl ca-certificates xz tar coreutils findutils ;;
+  *suse*) zypper --non-interactive refresh; zypper --non-interactive install curl ca-certificates xz tar coreutils findutils ;;
   *) echo "Unsupported container distribution: $ID" >&2; exit 1 ;;
 esac
 scratch=$(mktemp -d)

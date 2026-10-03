@@ -12,7 +12,7 @@ deb [check-valid-until=no signed-by=/usr/share/keyrings/debian-archive-keyring.g
 SOURCES
 apt_sources=(-o "Dir::Etc::sourcelist=$sources" -o Dir::Etc::sourceparts=- -o Acquire::Retries=3)
 apt-get "${apt_sources[@]}" update
-apt-get "${apt_sources[@]}" install -y --no-install-recommends build-essential cmake ninja-build python3 qtbase5-dev qtmultimedia5-dev libqt5svg5-dev libqt5multimedia5-plugins gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad libgl1-mesa-dri xz-utils binutils
+apt-get "${apt_sources[@]}" install -y --no-install-recommends build-essential cmake ninja-build python3 qtbase5-dev qtmultimedia5-dev libqt5svg5-dev libqt5multimedia5-plugins gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad libgl1-mesa-dri fonts-dejavu-core xz-utils binutils
 [ "$(getconf GNU_LIBC_VERSION)" = 'glibc 2.31' ] || { echo 'Build in Debian 11 to preserve the glibc 2.31 baseline.' >&2; exit 1; }
 deb_arch="$(dpkg --print-architecture)"
 case "$deb_arch" in amd64) arch=x86_64 ;; arm64) arch=arm64 ;; i386) arch=i386 ;; armhf) arch=armhf ;; *) echo "Unsupported architecture: $deb_arch" >&2; exit 1 ;; esac

@@ -3,7 +3,7 @@ set -eu
 cd "$(dirname "$0")/../.."
 version="${PACKAGE_VERSION:-1.0.0}"
 case "$(cat /etc/alpine-release)" in 3.22.*) ;; *) echo 'Build in Alpine 3.22 to preserve the musl baseline.' >&2; exit 1 ;; esac
-apk add --no-cache build-base cmake ninja python3 qt5-qtbase-dev qt5-qtmultimedia-dev qt5-qtsvg-dev gstreamer-tools gst-plugins-base gst-plugins-good gst-plugins-bad mesa-dri-gallium mesa-gl mesa-egl mesa-gles xz binutils
+apk add --no-cache build-base cmake ninja python3 qt5-qtbase-dev qt5-qtmultimedia-dev qt5-qtsvg-dev gstreamer-tools gst-plugins-base gst-plugins-good gst-plugins-bad mesa-dri-gallium mesa-gl mesa-egl mesa-gles font-dejavu xz binutils
 apk_arch="$(apk --print-arch)"
 case "$apk_arch" in x86_64) arch=x86_64 ;; aarch64) arch=arm64 ;; x86) arch=i386 ;; armv7) arch=armhf ;; *) echo "Unsupported Alpine architecture: $apk_arch" >&2; exit 1 ;; esac
 build="$PWD/build/compatibility-linux-musl-$arch"

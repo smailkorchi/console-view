@@ -21,8 +21,27 @@ for path in sorted(args.directory.rglob('*')):
             continue
     symbols = subprocess.check_output(['readelf', '--version-info', str(path)], text=True)
     versions = {tuple(int(part) for part in value.split('.')) for value in re.findall(r'GLIBC_(\d+\.\d+)', symbols)}
-    if args.libc == 'musl' and versions:
-        raise SystemExit(f'{path}: glibc symbols found in a musl package')
+    if args.libc == 'musl':
+        # Native musl libgcc can export GCC ABI compatibility as GLIBC_2.0.
+        # Version names alone therefore do not identify a libc dependency.
+        version_library = None
+        for line in symbols.splitlines():
+            owner = re.search(r'File:\s+(\S+)', line)
+            if owner:
+                version_library = owner.group(1)
+            for value in re.findall(r'Name:\s+GLIBC_(\d+\.\d+)', line):
+                if version_library != 'libgcc_s.so.1' or value != '2.0':
+                    raise SystemExit(f'{path}: glibc version GLIBC_{value} required from {version_library}')
+        dynamic = subprocess.check_output(['readelf', '--dynamic', str(path)], text=True)
+        needed = re.findall(r'Shared library:\s+\[([^]]+)\]', dynamic)
+        glibc_libraries = {'libc.so.6', 'libm.so.6', 'libpthread.so.0', 'librt.so.1',
+                           'libdl.so.2', 'libresolv.so.2', 'libanl.so.1', 'libutil.so.1'}
+        if any(name in glibc_libraries or name.startswith('ld-linux') for name in needed):
+            raise SystemExit(f'{path}: glibc library dependency in a musl package: {needed}')
+        program = subprocess.check_output(['readelf', '--program-headers', str(path)], text=True)
+        interpreter = re.search(r'Requesting program interpreter:\s+([^]]+)\]', program)
+        if interpreter and not interpreter.group(1).startswith('/lib/ld-musl-'):
+            raise SystemExit(f'{path}: non-musl program interpreter: {interpreter.group(1)}')
     if args.libc == 'glibc' and any(item > (2, 31) for item in versions):
         raise SystemExit(f'{path}: GLIBC requirement exceeds 2.31: {sorted(versions)}')
     cpp = {tuple(int(part) for part in value.split('.')) for value in re.findall(r'GLIBCXX_(\d+\.\d+\.\d+)', symbols)}
@@ -36,4 +55,4 @@ for path in sorted(args.directory.rglob('*')):
     count += 1
 if not count:
     raise SystemExit('No bundled ELF files found')
-print(f'PASS: {count} bundled ELF files match {args.arch or "requested"} {args.libc} baseline' + (' (GLIBC <= 2.31, GLIBCXX <= 3.4.28).' if args.libc == 'glibc' else ' (no glibc symbols).'))
+print(f'PASS: {count} bundled ELF files match {args.arch or "requested"} {args.libc} baseline' + (' (GLIBC <= 2.31, GLIBCXX <= 3.4.28).' if args.libc == 'glibc' else ' (no glibc runtime dependency).'))

@@ -79,15 +79,16 @@ install_dependencies() {
       set -- apt-get install libqt5multimedia5-plugins libqt5svg5 libxcb-cursor0 gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad
       $assume_yes && set -- "$@" -y ;;
     *fedora*|*rhel*|*centos*)
-      set -- dnf install gstreamer1 gstreamer1-plugins-base gstreamer1-plugins-good gstreamer1-plugins-bad-free
-      rpm_dependencies=true
-      $assume_yes && set -- "$@" -y ;;
+      set -- dnf install
+      $assume_yes && set -- "$@" -y
+      set -- "$@" gstreamer1 gstreamer1-plugins-base gstreamer1-plugins-good gstreamer1-plugins-bad-free
+      rpm_dependencies=true ;;
     *suse*)
       set -- zypper install gstreamer-utils gstreamer-plugins-base gstreamer-plugins-good gstreamer-plugins-bad
       rpm_dependencies=true
       if $assume_yes; then shift; set -- zypper --non-interactive "$@"; fi ;;
     *arch*)
-      set -- pacman -S --needed qt5-multimedia qt5-svg xcb-util-cursor gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad
+      set -- pacman -S --needed qt5-multimedia qt5-svg xcb-util-cursor libsm libice gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad
       $assume_yes && set -- "$@" --noconfirm ;;
     *alpine*)
       set -- apk add qt5-qtmultimedia qt5-qtsvg xcb-util-cursor gstreamer-tools gst-plugins-base gst-plugins-good gst-plugins-bad
